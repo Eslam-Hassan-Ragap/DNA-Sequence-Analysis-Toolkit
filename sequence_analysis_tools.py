@@ -21,3 +21,18 @@ def read_fasta(file_path):
             elif id_gene:    
                 genes[id_gene]+=line
     return genes
+
+def num_seq(seq):
+    """Function:
+    Count the number of sequences in a FASTA file or a dictionary of sequences.
+
+    Args:
+        file (dict or str): FASTA file or dictionary of sequences.
+
+    Returns:
+        int: Number of sequences in the file or dictionary.
+    """
+    if type(seq)==dict: # Check if seq is a dictionary
+        return len(seq)
+    elif type(seq)==str: # Check if seq is a string
+        return len(read_fasta(seq))
