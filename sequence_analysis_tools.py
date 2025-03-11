@@ -27,7 +27,7 @@ def num_seq(seq):
     Count the number of sequences in a FASTA file or a dictionary of sequences.
 
     Args:
-        file (dict or str): FASTA file or dictionary of sequences.
+        seq (dict or str): FASTA file or dictionary of sequences.
 
     Returns:
         int: Number of sequences in the file or dictionary.
@@ -36,3 +36,21 @@ def num_seq(seq):
         return len(seq)
     elif type(seq)==str: # Check if seq is a string
         return len(read_fasta(seq))
+    
+def lengths(genes): 
+    """Fuction:
+    Calculate the length of each sequence in a dictionary of sequences or a FASTA file.
+
+    Args:
+        genes (dict or str): Dictionary of sequences or path to a FASTA file.
+
+    Returns:
+        dict: Dictionary with sequence IDs as keys and their lengths as values.
+    """
+    if type(genes) == str: # Check if genes is a FASTA file path
+        genes=read_fasta(genes) # Read the FASTA file and store the sequences in a dictionary
+    len_genes={}
+    for id_gene,seq_gene in genes.items(): # Iterate over the sequences in the dictionary 
+        len_genes[id_gene]=len(seq_gene)
+    
+    return len_genes
