@@ -54,3 +54,24 @@ def lengths(genes):
         len_genes[id_gene]=len(seq_gene)
     
     return len_genes
+
+def max_seq(genes):
+    """Function:
+    Find the sequence with the maximum length in a dictionary of sequences.
+
+    Args:
+        genes (dict): Dictionary where keys are sequence IDs and values are sequences.
+
+    Returns:
+        dict: Dictionary with the sequence ID of maximum length and its length.
+    """
+    max_len_gene={}
+    
+    max_len_seq=len(max(genes.values(),key=len)) # Find the length of the longest sequence
+    
+    for id_gene , seq_gene in genes.items():     # Iterate over the sequences in the dictionary
+        
+        if len(seq_gene)==max_len_seq:          # Check if the length of the sequence is equal to the maximum length
+            max_len_gene[id_gene]=max_len_seq
+            
+    return max_len_gene
