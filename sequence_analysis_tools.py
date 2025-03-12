@@ -60,11 +60,14 @@ def max_seq(genes):
     Find the sequence with the maximum length in a dictionary of sequences.
 
     Args:
-        genes (dict): Dictionary where keys are sequence IDs and values are sequences.
+        genes (dict or str): Dictionary of sequences or path to a FASTA file.
 
     Returns:
         dict: Dictionary with the sequence ID of maximum length and its length.
     """
+    if type(genes)==str:  # Check if genes is a FASTA file path
+        genes=read_fasta(genes) # Read the FASTA file and store the sequences in a dictionary
+        
     max_len_gene={}
     
     max_len_seq=len(max(genes.values(),key=len)) # Find the length of the longest sequence
@@ -75,3 +78,26 @@ def max_seq(genes):
             max_len_gene[id_gene]=max_len_seq
             
     return max_len_gene
+
+def min_seq(genes):
+    """Funciont:
+    Find the sequence with the minimum length in a dictionary of sequences.
+
+    Args:
+        genes (dict or str): Dictionary of sequences or path to a FASTA file.
+
+    Returns:
+        dict: Dictionary with the sequence ID of minimum length and its length.
+    """
+    if type(genes)==str:  # Check if genes is a FASTA file path
+        genes=read_fasta(genes) # Read the FASTA file and store the sequences in a dictionary
+        
+    min_len_gene={}
+    
+    min_len_seq=len(min(genes.values(),key=len)) # Find the length of the shortest sequence
+    
+    for id_gene , seq_gene in genes.items(): # Iterate over the sequences in the dictionary
+        if len(seq_gene)==min_len_seq:  # Check if the length of the sequence is equal to the minimum length
+            min_len_gene[id_gene]=min_len_seq
+            
+    return min_len_gene
