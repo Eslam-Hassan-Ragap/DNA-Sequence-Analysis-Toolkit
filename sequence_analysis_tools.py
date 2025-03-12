@@ -99,3 +99,24 @@ def min_seq(genes):
             
     return min_len_gene 
 
+def get_forward_reading_frames(genes):
+    """Function:
+    Generate forward reading frames for each sequence in a dictionary of sequences.
+
+    Args:
+        genes (dict): Dictionary where keys are sequence IDs and values are DNA sequences.
+
+    Returns:
+        dict: Dictionary where each sequence ID maps to its forward reading frames.
+    """
+    f_readings={} 
+    
+    for id_gene,seq_gene in genes.items(): # Iterate over the sequences in the dictionary
+        subreading={} 
+        for i in range(3): # Iterate over a sequence to generate forward reading frames
+            num_frame=f"f_reading_frame_{i+1}"
+            subreading[num_frame]=seq_gene[i:] # Generate forward reading frames
+            
+        f_readings[id_gene]=subreading # Store the forward reading frames for the sequence
+        
+    return f_readings
