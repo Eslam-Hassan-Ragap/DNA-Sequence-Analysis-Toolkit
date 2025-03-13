@@ -152,3 +152,65 @@ def get_forward_orf(rf):
                 sub_orfs.setdefault(f"O_{frame_id}", "") # Ensure an entry exists for frames without valid ORFs
         orfs[gene_id] = sub_orfs
     return orfs
+
+def max_len_ORF(genes, rf=0, seq_id=None, starting_position=False):
+    """
+    Finds the longest Open Reading Frame (ORF) in the given set of gene sequences.
+    
+    Args:
+        genes (dict): Dictionary where each sequence ID maps to its forward reading frames.
+        rf (int, optional): Specifies the reading frame (1, 2, or 3). Defaults to 0 (any frame).
+        seq_id (str, optional): Specific gene ID to search for the longest ORF. Defaults to None.
+        starting_position (bool, optional): If True, returns the starting position of the ORF. Defaults to False.
+    
+    Returns:
+        dict or tuple: Dictionary with the gene ID and its longest ORF length.
+                      If `starting_position=True`, returns a tuple (max_len_orf, start_position).
+    """
+  
+    orfs = get_forward_orf(genes) # Get ORFs for the gene sequences
+
+    max_orf_length = 0
+    max_orf_info = {}
+    longest_orf_name = None
+    gene_with_longest_orf = None
+    
+    if not seq_id:  # Find longest ORF across all genes
+        for gene_id, orf_dict in orfs.items():
+            if rf:  # If a specific reading frame is requested
+                orf_name = f"O_f_reading_frame_{rf}"
+                orf_seq = orf_dict.get(orf_name, "")
+                if len(orf_seq) > max_orf_length:
+                    max_orf_length = len(orf_seq)
+                    gene_with_longest_orf = gene_id
+                    longest_orf_name = orf_name
+            else:  # Check all frames
+                longest_orf_seq = max(orf_dict.values(), key=len, default="") # Find longest ORF in the gene
+                if len(longest_orf_seq) > max_orf_length:
+                    max_orf_length = len(longest_orf_seq)
+                    gene_with_longest_orf = gene_id
+                    longest_orf_name = [k for k, v in orf_dict.items() if v == longest_orf_seq][0] # Get ORF name
+    
+    else:  # If a specific gene ID is provided
+        if seq_id not in orfs:
+            return {}  # Return empty if gene ID not found
+        
+        longest_orf_seq = max(orfs[seq_id].values(), key=len, default="") # Find longest ORF in the gene
+        max_orf_length = len(longest_orf_seq)
+        longest_orf_name = [k for k, v in orfs[seq_id].items() if v == longest_orf_seq][0] # Get ORF name
+        gene_with_longest_orf = seq_id
+
+    if not gene_with_longest_orf:
+        return {}  # No valid ORF found
+
+    # Prepare the result dictionary
+    max_orf_info = {gene_with_longest_orf: {longest_orf_name: max_orf_length}}
+
+    # Find starting position if requested
+    if starting_position:
+        reading_frames =genes
+        reading_frame_seq = reading_frames[gene_with_longest_orf].get(f"f_reading_frame_{longest_orf_name[-1]}", "")
+        start_pos = reading_frame_seq.find(orfs[gene_with_longest_orf][longest_orf_name]) + 1  # 1-based index
+        return max_orf_info, start_pos
+
+    return max_orf_info
