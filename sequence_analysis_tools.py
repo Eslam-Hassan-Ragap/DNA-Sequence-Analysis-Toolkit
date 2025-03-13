@@ -120,3 +120,35 @@ def get_forward_reading_frames(genes):
         f_readings[id_gene]=subreading # Store the forward reading frames for the sequence
         
     return f_readings
+
+def get_forward_orf(rf):
+    """Function:
+    Find the open reading frames (ORFs) in each forward reading frame of a sequence.
+
+    Args:
+        rf (dict): Dictionary where each sequence ID maps to its forward reading frames.
+
+    Returns:
+        dict: Dictionary where each sequence ID maps to its ORFs in the forward reading frames.
+    """
+        
+    orfs={} # Initialize an empty dictionary to store the ORFs
+    stop_codons = {"TAA", "TGA", "TAG"}
+    for gene_id, frames in rf.items(): # Iterate over the sequences in the dictionary
+        sub_orfs = {} # Initialize an empty dictionary to store ORFs for the sequence
+        for frame_id, frame in frames.items(): # Iterate over the forward reading frames
+            orf_sequence = ""
+            
+            for i in range(0, len(frame), 3): # Iterate over the reading frame to find ORFs by codon
+                codon = frame[i:i+3]
+                
+                if codon == "ATG" or orf_sequence: # Check if the codon is a start codon or if an ORF has started
+                    orf_sequence += codon
+                    if codon in stop_codons: # Check if the codon is a stop codon
+                        sub_orfs[f"O_{frame_id}"] = orf_sequence # Store the ORF in the dictionary
+                        break
+        
+        
+                sub_orfs.setdefault(f"O_{frame_id}", "") # Ensure an entry exists for frames without valid ORFs
+        orfs[gene_id] = sub_orfs
+    return orfs
