@@ -18,13 +18,12 @@ DNA-Sequence-Analysis-Toolkit is a Python library/module designed to process and
 read_fasta(file_path): Reads a FASTA file and returns a dictionary with sequence IDs as keys and sequences as values
 
 ### ***Basic Statistics***<br/>
-`num_seq(seq)`: Counts the number of sequences in a FASTA file or dictionary
-`lengths(genes)`: Calculates the length of each sequence
-`max_seq(genes)`: Finds the sequence with the maximum length
-`min_seq(genes)`: Finds the sequence with the minimum length
-
+`num_seq(seq)`: Counts the number of sequences in a FASTA file or dictionary<br/>
+`lengths(genes)`: Calculates the length of each sequence<br/>
+`max_seq(genes)`: Finds the sequence with the maximum length<br/>
+`min_seq(genes)`: Finds the sequence with the minimum length<br/>
 ### ***Advanced Analysis***<br/>
-`get_forward_reading_frames(genes)`: Generates forward reading frames for DNA sequences
-`get_forward_orf(rf)`: Finds open reading frames (ORFs) in each reading frame
-`max_len_ORF(genes, rf=0, seq_id=None, starting_position=False)`: Locates the longest ORF in gene sequences
-`count_repeates(genes, length=1, repeat=None)`: Counts repeats of specific lengths or sequences
+`get_forward_reading_frames(genes)`: Generates forward reading frames for DNA sequences<br/>
+`get_forward_orf(rf)`: Finds open reading frames (ORFs) in each reading frame<br/>
+`max_len_ORF(genes, rf=0, seq_id=None, starting_position=False)`: Locates the longest ORF in gene sequences<br/>
+`count_repeates(genes, length=1, repeat=None)`: Counts repeats of specific lengths or sequences<br/>
