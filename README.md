@@ -10,7 +10,7 @@ The **DNA Sequence Analysis Toolkit** is a Python library/module crafted for pro
 - **Extremes Identification**: Identifies the longest and shortest sequences in a dataset.
 - **Forward Reading Frames**: Generates three forward reading frames for each DNA sequence.
 - **Open Reading Frame <ins>(ORF)</ins> Detection**: Identifies ORFs within forward reading frames.
-- **Longest ORF Search**: Locates the longest ORF across a sequence or dataset.
+- **Longest ORF Search**: Finds and locates the longest ORF across a sequence or dataset.
 - **Repeat Detection**: Analyzes and counts repeated subsequences of specified lengths.
 
 ## Functions
@@ -101,4 +101,4 @@ print(f"Longest ORF: {dna_toolkit.max_len_ORF(sequences)}")
 
 ## Author
 **Eslam Hassan**  
-- Contact: [heslam607@gmail.com](e-mail) 
+- Contact: [e-mail](heslam607@gmail.com) 
