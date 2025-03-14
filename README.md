@@ -27,3 +27,5 @@ DNA-Sequence-Analysis-Toolkit is a Python library/module designed to process and
 `get_forward_orf(rf)`: Finds open reading frames (ORFs) in each reading frame<br/>
 `max_len_ORF(genes, rf=0, seq_id=None, starting_position=False)`: Locates the longest ORF in gene sequences<br/>
 `count_repeates(genes, length=1, repeat=None)`: Counts repeats of specific lengths or sequences<br/>
+##Author
+**Eslam Hassan**
