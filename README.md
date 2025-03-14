@@ -12,3 +12,6 @@ DNA-Sequence-Analysis-Toolkit is a Python library/module designed to process and
 * ***Open Reading Frames <ins>(ORFs)</ind>***: Identifies ORFs in forward reading frames.<br/>
 * ***Longest ORF***: Finds the longest ORF in a given sequence or dataset.<br/>
 - ***Repeat Analysis***: Counts repeated sequences of specified lengths.<br/>
+
+## Functions
+### Reading FASTA files
