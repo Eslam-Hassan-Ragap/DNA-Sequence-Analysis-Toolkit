@@ -5,10 +5,17 @@ DNA-Sequence-Analysis-Toolkit is a Python library/module designed to process and
 
 ## Features
 **Reading FASTA files**: Parses a FASTA file and stores sequences in a dictionary.
-**Sequence Counting**: Counts the number of sequences in a FASTA file or dictionary.
+
+**Sequence Counting**: Counts the number of sequences in a FASTA file or dictionary.\
+
 **Sequence Lengths**: Calculates the length of each sequence.
+
 **Longest and Shortest Sequences**: Identifies sequences with the maximum and minimum lengths.
+
 **Forward Reading Frames**: Generates three forward reading frames for each sequence.
+
 **Open Reading Frames (ORFs)**: Identifies ORFs in forward reading frames.
+
 **Longest ORF**: Finds the longest ORF in a given sequence or dataset.
+
 **Repeat Analysis**: Counts repeated sequences of specified lengths.
