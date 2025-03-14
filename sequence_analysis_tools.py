@@ -10,16 +10,16 @@ def read_fasta(file_path):
     """
     
     with open(file_path, "r") as file_fa:
-        genes={}
-        id_gene=None
+        genes = {}
+        id_gene = None
         for line in file_fa:
-            line=line.strip()
-            if(line.startswith('>')):
-                id_gene=line[1:line.index(" ")]
+            line = line.strip()
+            if line.startswith('>'): # Check if the line is a sequence ID
+                id_gene = line[1:line.index(" ")] if " " in line else line[1:]
                 if id_gene not in genes:
-                    genes[id_gene]=""
-            elif id_gene:    
-                genes[id_gene]+=line
+                    genes[id_gene] = ""
+            elif id_gene:
+                genes[id_gene] += line
     return genes
 
 def num_seq(seq):
@@ -27,14 +27,14 @@ def num_seq(seq):
     Count the number of sequences in a FASTA file or a dictionary of sequences.
 
     Args:
-        seq (dict or str): FASTA file or dictionary of sequences.
+        seq (dict or str): Dictionary of sequences or path to a FASTA file.
 
     Returns:
         int: Number of sequences in the file or dictionary.
     """
-    if type(seq)==dict: # Check if seq is a dictionary
+    if isinstance(seq, dict): # Check if seq is a dictionary
         return len(seq)
-    elif type(seq)==str: # Check if seq is a string
+    elif isinstance(seq, str): # Check if seq is a FASTA file path
         return len(read_fasta(seq))
     
 def lengths(genes): 
@@ -86,7 +86,7 @@ def min_seq(genes):
     Returns:
         dict: Dictionary with the sequence ID of minimum length and its length.
     """
-    if type(genes)==str:  # Check if genes is a FASTA file path
+    if isinstance(genes,str):  # Check if genes is a FASTA file path
         genes=read_fasta(genes) # Read the FASTA file and store the sequences in a dictionary
         
     min_len_gene={}
@@ -139,7 +139,7 @@ def get_forward_orf(rf):
         for frame_id, frame in frames.items(): # Iterate over the forward reading frames
             orf_sequence = ""
             
-            for i in range(0, len(frame), 3): # Iterate over the reading frame to find ORFs by codon
+            for i in range(0, len(frame) - (len(frame) % 3), 3): # Iterate over the reading frame to find ORFs by codon
                 codon = frame[i:i+3]
                 
                 if codon == "ATG" or orf_sequence: # Check if the codon is a start codon or if an ORF has started
@@ -149,17 +149,17 @@ def get_forward_orf(rf):
                         break
         
         
-                sub_orfs.setdefault(f"O_{frame_id}", "") # Ensure an entry exists for frames without valid ORFs
+            sub_orfs.setdefault(f"O_{frame_id}", "") # Ensure an entry exists for frames without valid ORFs
         orfs[gene_id] = sub_orfs
     return orfs
 
-def max_len_ORF(genes, rf=0, seq_id=None, starting_position=False):
+def max_len_ORF(reading_frames, num_rf=0, seq_id=None, starting_position=False):
     """
-    Finds the longest Open Reading Frame (ORF) in the given set of gene sequences.
+    Finds the longest Open Reading Frame (ORF) in the given set of reading frames.
     
     Args:
-        genes (dict): Dictionary where each sequence ID maps to its forward reading frames.
-        rf (int, optional): Specifies the reading frame (1, 2, or 3). Defaults to 0 (any frame).
+        reading_frames (dict): Dictionary where each sequence ID maps to its forward reading frames.
+        num_rf (int, optional): Specifies the reading frame (1, 2, or 3). Defaults to 0 (any frame).
         seq_id (str, optional): Specific gene ID to search for the longest ORF. Defaults to None.
         starting_position (bool, optional): If True, returns the starting position of the ORF. Defaults to False.
     
@@ -168,17 +168,17 @@ def max_len_ORF(genes, rf=0, seq_id=None, starting_position=False):
                       If `starting_position=True`, returns a tuple (max_len_orf, start_position).
     """
   
-    orfs = get_forward_orf(genes) # Get ORFs for the gene sequences
+    orfs = get_forward_orf(reading_frames) # Get ORFs for the gene sequences
 
     max_orf_length = 0
     max_orf_info = {}
     longest_orf_name = None
     gene_with_longest_orf = None
     
-    if not seq_id:  # Find longest ORF across all genes
+    if not seq_id:  # Find longest ORF across all ORFs
         for gene_id, orf_dict in orfs.items():
-            if rf:  # If a specific reading frame is requested
-                orf_name = f"O_f_reading_frame_{rf}"
+            if num_rf:  # If a specific reading frame is requested
+                orf_name = f"O_f_reading_frame_{num_rf}"
                 orf_seq = orf_dict.get(orf_name, "")
                 if len(orf_seq) > max_orf_length:
                     max_orf_length = len(orf_seq)
@@ -208,7 +208,6 @@ def max_len_ORF(genes, rf=0, seq_id=None, starting_position=False):
 
     # Find starting position if requested
     if starting_position:
-        reading_frames =genes
         reading_frame_seq = reading_frames[gene_with_longest_orf].get(f"f_reading_frame_{longest_orf_name[-1]}", "")
         start_pos = reading_frame_seq.find(orfs[gene_with_longest_orf][longest_orf_name]) + 1  # 1-based index
         return max_orf_info, start_pos
