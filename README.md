@@ -59,11 +59,11 @@ The **DNA Sequence Analysis Toolkit** is a Python library/module crafted for pro
     - `rf` (list): List of reading frames for a sequence.
   - **Returns**: List of ORFs found in the reading frames.
 
-- **`max_len_ORF(genes, rf=0, seq_id=None, starting_position=False)`**  
+- **`max_len_ORF(reading_frames, num_rf=0, seq_id=None, starting_position=False)`**  
   - **Description**: Finds the longest ORF in a specified sequence or across all sequences in the dataset.
   - **Parameters**: 
-    - `genes` (dict): Dictionary of sequences.
-    - `rf` (int, optional): Reading frame to analyze (0, 1, or 2; default is 0).
+    - `reading_frames` (dict): Dictionary of sequences.
+    - `num_rf` (int, optional): Reading frame to analyze (1, 2, or 3). Defaults to 0 (any frame).
     - `seq_id` (str, optional): Specific sequence ID to analyze (default is None, analyzes all).
     - `starting_position` (bool, optional): If True, returns the starting position of the longest ORF (default is False).
   - **Returns**: Tuple containing the longest ORF sequence and its length (and starting position if requested).
