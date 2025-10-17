@@ -170,36 +170,49 @@ def max_len_ORF(reading_frames, num_rf=0, seq_id=None, starting_position=False):
     """
   
     orfs = get_forward_orf(reading_frames) # Get ORFs for the gene sequences
-
     max_orf_length = 0
     max_orf_info = {}
     longest_orf_name = None
     gene_with_longest_orf = None
-    
+    longest_orf_seq=""
     if not seq_id:  # Find longest ORF across all ORFs
         for gene_id, orf_dict in orfs.items():
             if num_rf:  # If a specific reading frame is requested
                 orf_name = f"O_f_reading_frame_{num_rf}"
                 orf_seq = orf_dict.get(orf_name, "")
-                if len(orf_seq) > max_orf_length:
-                    max_orf_length = len(orf_seq)
-                    gene_with_longest_orf = gene_id
-                    longest_orf_name = orf_name
-            else:  # Check all frames
-                longest_orf_seq = max(orf_dict.values(), key=len, default="") # Find longest ORF in the gene
+                longest_orf_seq = max(orf_seq, key=len , default="")  # Find the longest ORF in the specified frame among all genes
                 if len(longest_orf_seq) > max_orf_length:
                     max_orf_length = len(longest_orf_seq)
                     gene_with_longest_orf = gene_id
-                    longest_orf_name = [k for k, v in orf_dict.items() if v == longest_orf_seq][0] # Get ORF name
+                    longest_orf_name = orf_name
+            else:  # Find longest ORG over all the frames among all genes
+                for orf_num, orf_seq in orf_dict.items():   
+                    longest_orf_seq = max(orf_seq,key=len, default="")  # Find the longest ORF in the current frame
+                    if len(longest_orf_seq) > max_orf_length:  
+                        max_orf_length = len(longest_orf_seq)
+                        gene_with_longest_orf = gene_id
+                        longest_orf_name = orf_num  
+                    
     
     else:  # If a specific gene ID is provided
         if seq_id not in orfs:
             return {}  # Return empty if gene ID not found
-        
-        longest_orf_seq = max(orfs[seq_id].values(), key=len, default="") # Find longest ORF in the gene
-        max_orf_length = len(longest_orf_seq)
-        longest_orf_name = [k for k, v in orfs[seq_id].items() if v == longest_orf_seq][0] # Get ORF name
-        gene_with_longest_orf = seq_id
+        seq_orfs = orfs[seq_id]
+        if num_rf:  # If a specific reading frame is requested
+            orf_name = f"O_f_reading_frame_{num_rf}"
+            orf_seq = seq_orfs.get(orf_name, "")
+            longest_orf_seq = max(orf_seq, key=len, default="")  # Find longest ORF in the specified frame
+            max_orf_length = len(longest_orf_seq)
+            longest_orf_name = orf_name
+            gene_with_longest_orf = seq_id
+            
+        else: # Find longest ORG over all the frames in the specified gene
+            for orf_num, orf_seq in seq_orfs.items():
+                longest_orf_seq = max(orf_seq, key=len)
+                if len(longest_orf_seq) > max_orf_length:
+                    max_orf_length = len(longest_orf_seq)
+                    longest_orf_name = orf_num
+                    gene_with_longest_orf = seq_id
 
     if not gene_with_longest_orf:
         return {}  # No valid ORF found
@@ -209,8 +222,12 @@ def max_len_ORF(reading_frames, num_rf=0, seq_id=None, starting_position=False):
 
     # Find starting position if requested
     if starting_position:
-        reading_frame_seq = reading_frames[gene_with_longest_orf].get(f"f_reading_frame_{longest_orf_name[-1]}", "")
-        start_pos = reading_frame_seq.find(orfs[gene_with_longest_orf][longest_orf_name]) + 1  # 1-based index
+        reading_frame_seq = reading_frames[gene_with_longest_orf][longest_orf_name.replace("O_", "")]
+        if num_rf:
+            start_pos = reading_frame_seq.find(longest_orf_seq) + 1+(num_rf-1)  # 1-based index
+        else:
+            n_rf=int(longest_orf_name.split("_")[-1][-1])
+            start_pos = reading_frame_seq.find(longest_orf_seq) + 1+(n_rf-1)  # 1-based index
         return max_orf_info, start_pos
 
     return max_orf_info
