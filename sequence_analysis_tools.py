@@ -129,7 +129,7 @@ def get_forward_orf(rf):
         rf (dict): Dictionary where each sequence ID maps to its forward reading frames.
 
     Returns:
-        dict: Dictionary where each sequence ID maps to its ORFs in the forward reading frames.
+        dict: Dictionary where each sequence ID maps to its all potential ORFs in the forward reading frames.
     """
         
     orfs={} # Initialize an empty dictionary to store the ORFs
@@ -137,19 +137,20 @@ def get_forward_orf(rf):
     for gene_id, frames in rf.items(): # Iterate over the sequences in the dictionary
         sub_orfs = {} # Initialize an empty dictionary to store ORFs for the sequence
         for frame_id, frame in frames.items(): # Iterate over the forward reading frames
-            orf_sequence = ""
-            
+            orf_sequence = []
+            suborf_sequence = "" # Initialize an empty string to store the current ORF sequence
             for i in range(0, len(frame) - (len(frame) % 3), 3): # Iterate over the reading frame to find ORFs by codon
                 codon = frame[i:i+3]
                 
-                if codon == "ATG" or orf_sequence: # Check if the codon is a start codon or if an ORF has started
-                    orf_sequence += codon
+                if codon == "ATG" or suborf_sequence: # Check if the codon is a start codon or if an ORF has started
+                    suborf_sequence += codon
                     if codon in stop_codons: # Check if the codon is a stop codon
-                        sub_orfs[f"O_{frame_id}"] = orf_sequence # Store the ORF in the dictionary
-                        break
+                        orf_sequence.append(suborf_sequence) # Append the ORF sequence to the list 
+                        suborf_sequence = "" # Reset the ORF sequence for the next potential ORF
+            sub_orfs[f"O_{frame_id}"] = orf_sequence # Store the ORF in the dictionary
         
         
-            sub_orfs.setdefault(f"O_{frame_id}", "") # Ensure an entry exists for frames without valid ORFs
+        
         orfs[gene_id] = sub_orfs
     return orfs
 
