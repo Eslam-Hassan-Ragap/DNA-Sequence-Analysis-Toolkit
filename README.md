@@ -101,4 +101,4 @@ print(f"Longest ORF: {dna_toolkit.max_len_ORF(sequences)}")
 
 ## Author
 **Eslam Hassan**  
-- Contact: [e-mail](eslam.hassan.ragap@gmail.com) 
+- Contact: [e-mail](mailto:eslam.hassan.ragap@gmail.com)
