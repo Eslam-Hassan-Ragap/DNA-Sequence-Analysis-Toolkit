@@ -275,3 +275,25 @@ def count_repeates(genes,length=1,repeat=None):
                 repeates[id_gene]=sub_repeates
                 
     return repeates
+
+def most_frequent_repeats(repeates,top_n=5):
+    """
+    Function:
+    Find the most frequent repeats across all sequences.    
+    Args:
+        repeates (dict): Dictionary where each sequence ID maps to a dictionary of repeats and their counts.
+        top_n (int, optional): Number of top frequent repeats to return. Defaults to 5.
+    Returns:
+        dict: Dictionary where each repeat sequence maps to its total count across all sequences.
+        
+    """
+    total_repets={} # Initialize an empty dictionary to store total repeats
+    for gene_id, reps in repeates.items(): # Iterate over the sequences in the dictionary
+
+        for rep , num in reps.items(): # Iterate over the repeats in the sequence
+            if rep in total_repets:
+                total_repets[rep] += num
+            else:   
+                total_repets[rep] = num
+    sorted_repeats=dict(sorted(total_repets.items(), key=lambda item: item[1], reverse=True)[:top_n])# Sort repeats by their total count
+    return sorted_repeats
