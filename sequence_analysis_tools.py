@@ -297,3 +297,25 @@ def most_frequent_repeats(repeates,top_n=5):
                 total_repets[rep] = num
     sorted_repeats=dict(sorted(total_repets.items(), key=lambda item: item[1], reverse=True)[:top_n])# Sort repeats by their total count
     return sorted_repeats
+
+def max_repet(repeates):
+    """
+    Function:
+    Find the maximum repeat counts across all sequences.    
+    Args:
+        repeates (dict): Dictionary where each sequence ID maps to a dictionary of repeats and their counts.
+    Returns:
+        dict: Dictionary where each repeat sequence maps to its maximum count across all sequences.
+        
+    """
+    max_repets={}
+    for gene_id, reps in repeates.items(): # Iterate over the sequences in the dictionary
+
+        for rep , num in reps.items(): # Iterate over the repeats in the sequence
+            if rep in max_repets:
+                max_repets[rep] += num
+            else:   
+                max_repets[rep] = num
+    max_repet=max(max_repets.values()) 
+    sorted_repeats={k:v for k,v in max_repets.items() if v==max_repet} # Get repeats with the maximum count
+    return sorted_repeats 
