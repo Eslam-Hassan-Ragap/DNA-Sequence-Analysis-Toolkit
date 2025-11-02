@@ -244,12 +244,13 @@ def count_repeates(genes,length=1,repeat=None):
     Returns:
         dict: Dictionary where each sequence ID maps to a dictionary of repeats and their counts.
     """
+
     repeates={}
     if repeat:  # Check if a specific repeat sequence is provided
         length=len(repeat)
         for id_gene,seq_gene in genes.items(): # Iterate over the sequences in the dictionary
             sub_repeates={}
-            for rep in range(0,len(genes)-(length-1)): # Iterate over the sequence to find repeats
+            for rep in range(0,len(seq_gene)-(length-1)): # Iterate over the sequence to find repeats
                 if seq_gene[rep:rep+length]==repeat:
                     sub_repeates[seq_gene[rep:rep+length]]=sub_repeates.get(seq_gene[rep:rep+length],0)+1 # Store the repeat and its count
             repeates[id_gene]=sub_repeates
@@ -259,15 +260,18 @@ def count_repeates(genes,length=1,repeat=None):
                 sub_repeates={}
                 for Len in range(2,len(seq_gene)+1):      
                     for rep in range(0,len(seq_gene)-(Len-1)):
-                        sub_repeates[seq_gene[rep:rep+Len]]=sub_repeates.get(seq_gene[rep:rep+Len],0)+1
+                        sub_repeates[seq_gene[rep:rep+Len]]=sub_repeates.get(seq_gene[rep:rep+Len],0)+1 # Store the repeat and its count
                     sub_repeates={k:v for k,v in sub_repeates.items() if v>1} # Store the repeat and its count which is greater than 1
                 repeates[id_gene]=sub_repeates
         else:   # Find repeats of a specific length
             for id_gene,seq_gene in genes.items():
                 sub_repeates={}
-                for rep in range(0,len(seq_gene)-(length-1)):
-                    sub_repeates[seq_gene[rep:rep+length]]=sub_repeates.get(seq_gene[rep:rep+length],0)+1
-                sub_repeates={k:v for k,v in sub_repeates.items() if v>1}
+                for rep in range(0,(len(seq_gene)-length)+1): # Iterate over the sequence to find repeats
+                    r=seq_gene[rep:rep+length]
+                    if r in sub_repeates:
+                        sub_repeates[r]+=1
+                    else:
+                        sub_repeates[r]=1
                 repeates[id_gene]=sub_repeates
                 
     return repeates
